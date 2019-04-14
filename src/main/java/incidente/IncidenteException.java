@@ -1,3 +1,5 @@
+package incidente;
+
 public class IncidenteException extends Exception {
 
     public IncidenteException() {

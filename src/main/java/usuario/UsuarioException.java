@@ -1,3 +1,5 @@
+package usuario;
+
 public class UsuarioException extends Exception {
 
     public UsuarioException() {

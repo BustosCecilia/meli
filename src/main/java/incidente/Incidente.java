@@ -1,12 +1,16 @@
-import java.text.SimpleDateFormat;
+package incidente;
+import usuario.Usuario;
+import enums.Clasificacion;
+
+
 import java.util.Date;
 
 public class Incidente {
     private int id;
     private Clasificacion clasificacion;
     private String descripcion;
-    private Usuario reportador;
-    private Usuario responsable;
+    private Usuario reportador = new Usuario();
+    private Usuario responsable= new Usuario();
     private Date dateCreacion;
     private Date dateSolucion;
 

@@ -1,11 +1,11 @@
+package integrante;
+
 public class Integrante {
 
     private String id;
     private String nombre;
     private String apellido;
     private String email;
-
-
 
     public String getId() {
         return id;

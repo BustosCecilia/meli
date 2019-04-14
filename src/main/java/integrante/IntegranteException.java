@@ -1,3 +1,5 @@
+package integrante;
+
 public class IntegranteException extends Exception {
 
     public IntegranteException() {

@@ -1,3 +1,5 @@
+package enums;
+
 public enum Clasificacion {
     CRITICO ("CRITICO"),
     NORMAL ("NORMAL"),

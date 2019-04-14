@@ -1,3 +1,5 @@
+package proyecto;
+
 public class ProyectoException extends Exception {
 
     public ProyectoException() {

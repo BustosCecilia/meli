@@ -1,3 +1,7 @@
+package proyecto;
+
+import usuario.Usuario;
+
 public class Proyecto {
     private int id;
     private String titulo;

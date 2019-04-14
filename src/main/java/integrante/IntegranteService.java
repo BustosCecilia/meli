@@ -1,3 +1,4 @@
+package integrante;
 import java.util.Collection;
 
 public interface IntegranteService {

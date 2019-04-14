@@ -1,24 +1,25 @@
+package usuario;
+
+import integrante.IntegranteException;
+import usuario.Usuario;
+import usuario.UsuarioService;
+
 import java.util.Collection;
-import java.util.HashMap;
 
 public class UsuarioServiceMapImpl implements UsuarioService {
-    private HashMap<String, Usuario> usuarioMap;
 
-    public UsuarioServiceMapImpl() {
-        usuarioMap = new HashMap<String, Usuario>();
-    }
     @Override
     public void addUsuario(Usuario usuario) {
 
     }
 
     @Override
-    public Collection<Usuario> getUsuario() {
+    public Collection<Usuario> getUsuarios() {
         return null;
     }
 
     @Override
-    public Usuario getUsuario(String id) {
+    public Usuario getUsuario(int id) {
         return null;
     }
 
@@ -28,12 +29,12 @@ public class UsuarioServiceMapImpl implements UsuarioService {
     }
 
     @Override
-    public void deleteUsuario(String id) {
+    public void deleteUsuario(int id) {
 
     }
 
     @Override
-    public boolean existUsuario(String id) {
+    public boolean existUsuario(int id) {
         return false;
     }
 }
