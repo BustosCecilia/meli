@@ -1,11 +1,14 @@
 package main;
-
+import Agencia.Agencia;
 import com.google.gson.Gson;
 import enums.StatusResponse;
-import integrante.Integrante;
-import integrante.IntegranteService;
-import integrante.IntegranteServiceMapImpl;
 import standarResponse.StandardResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import static spark.Spark.*;
 
@@ -13,56 +16,98 @@ public class SparkRest {
 
     public static void main(String[] args) {
 
-        //port(8080); //Ver que no este bloqueado por firewall o en uso.
-        final IntegranteService integranteService = new IntegranteServiceMapImpl();
 
-        // Crear un integrante.
-        post("/integrante/", (request, response) -> {
-            response.type("application/json");
-            Integrante integrante = new Gson().fromJson(request.body(), Integrante.class);
-            integranteService.addIntegrante(integrante);
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS));
-        });
+        get("/agencia", ((request, response) -> {
 
-        //
-        get("/integrante/", ((request, response) -> {
+            String site_id = request.queryParams("site_id");
+            String payment_method_id = request.queryParams("payment_method_id");
+            String near_to = request.queryParams("near_to");
+            String limit = request.queryParams("limit");
+            String offset = request.queryParams("offset");
             response.type("application/json");
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    new Gson().toJsonTree(integranteService.getIntegrantes())));
-        }));
-
-        get("/integrante/:id", ((request, response) -> {
-            response.type("application/json");
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    new Gson().toJsonTree(integranteService.getIntegrante(request.params(":id")))));
-        }));
-
-        put("/integrante", (request, response) -> { // meter esto en un try catch
-            response.type("application/json");
-            Integrante integrante = new Gson().fromJson(response.body(), Integrante.class);
-            Integrante integranteEditado = integranteService.modifyIntegrante(integrante);
-            if(integranteEditado != null){
-                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                        new Gson().toJsonTree(integranteEditado)));
+            // seteo url
+            String url = "https://api.mercadolibre.com/sites/";
+            // me fijo si exiten los parametros
+            if (site_id == null) {
+                throw new MalformedURLException("El site_id es nulo!");
             }
-            else {
-                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR,
-                        "Error al editar el integrante."));
+            else{
+                url=url+site_id+"/payment_methods/";
+                System.out.println(url);
+                if(payment_method_id==null){
+                    throw new MalformedURLException("El payment_method_id es nulo");
+                }
+                else{
+                    url=url+payment_method_id+"/agencies?";
+                    if(near_to!=null){
+                        url=url+"near_to="+near_to;
+                        if(limit!=null){
+                            url=url+"&limit="+limit;
+                            if(offset!=null){
+                                url="&offset="+offset;
+                            }
+                        }
+                    }
+
+
+                    System.out.println(url);
+                    System.out.println("https://api.mercadolibre.com/sites/MLA/payment_methods/rapipago/agencies?near_to=-31.3364568," +
+                            "-64.2046846,150000");
+                    try {
+                        String data = readUrl(url);
+                       System.out.println(data);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+                }
             }
-        });
 
-        delete("/integrante/:id", ((request, response) -> {
-            response.type("application/json");
-            integranteService.deleteIntegrante(request.params(":id"));
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,"integrante.Integrante borrado."));
-        }));
 
-        options("/integrante/:id", ((request, response) -> {
-            response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    (integranteService.existIntegrante(request.params(":id")) ?
-                    "El integrante existe." :
-                    "El integrante no existe")));
+                    "2000"));
         }));
+
+
     }
+
+    /*
+     leer url
+    */
+    /* quiero que me devuelva el resultado de una url */
+    private static String readUrl(String urlString) throws IOException { //Malforme esta dentro
+
+        BufferedReader reader = null;
+        // me lo convierte en un objeto url
+        try {
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("Accept", "aplication/json");
+            connection.setRequestProperty("User-Agent", "Mozill/5.0");
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            StringBuilder buffer = new StringBuilder();
+            char[] chars = new char[1024];
+            int read = 0; // leo la cantidad de caracteres
+            while ((read = reader.read(chars)) != -1) {
+                buffer.append(chars, 0, read);
+            }
+            System.out.println(buffer.toString());
+            return buffer.toString();
+        }
+        finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+
+    }
+
+
 }
+
+
+
