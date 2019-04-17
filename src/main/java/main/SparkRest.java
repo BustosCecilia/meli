@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import enums.StatusResponse;
 import standarResponse.StandardResponse;
+import sun.jvm.hotspot.debugger.Address;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,19 +51,21 @@ public class SparkRest {
                             }
                         }
                     }
-
-
+                    // imprimo mi url formada
                     System.out.println("url es "+url);
-                    System.out.println("https://api.mercadolibre.com/sites/MLA/payment_methods/rapipago/agencies?near_to=-31.3364568," +
-                            "-64.2046846,150000");
                     try {
                         String data = readUrl(url);
                        System.out.println(data);
+                       //Array de agencias
                         JsonParser jsonparser = new JsonParser();
                         JsonObject jsonObject = jsonparser.parse(data).getAsJsonObject();
                         Agencia[] agencias = new Gson().fromJson(jsonObject.get("results"), Agencia[].class);
-                        System.out.println("Categorias de MELI: ");
-
+                        System.out.println("Datos de Json Agencia");
+                        //Array de Address
+                        JsonParser jsonparser1 = new JsonParser();
+                        JsonObject jsonObject1 = jsonparser1.parse(data).getAsJsonObject();
+                        Address[] address = new Gson().fromJson(jsonObject1.get("results"), Address[].class);
+                        System.out.println("Datos de Json Address");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -74,7 +78,7 @@ public class SparkRest {
 
 
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    "2000"));
+                    "todo ok"));
         }));
 
 
@@ -86,7 +90,6 @@ public class SparkRest {
     /* quiero que me devuelva el resultado de una url */
     private static String readUrl(String urlString) throws IOException { //Malforme esta dentro
         URL url = new URL(urlString);
-
         BufferedReader reader = null;
         // me lo convierte en un objeto url
         try {
@@ -109,11 +112,9 @@ public class SparkRest {
                 reader.close();
             }
         }
-
     }
-
-
 }
+
 
 
 
