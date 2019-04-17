@@ -1,6 +1,8 @@
 package main;
 import Agencia.Agencia;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import enums.StatusResponse;
 import standarResponse.StandardResponse;
 import java.io.BufferedReader;
@@ -33,7 +35,6 @@ public class SparkRest {
             }
             else{
                 url=url+site_id+"/payment_methods/";
-                System.out.println(url);
                 if(payment_method_id==null){
                     throw new MalformedURLException("El payment_method_id es nulo");
                 }
@@ -50,12 +51,16 @@ public class SparkRest {
                     }
 
 
-                    System.out.println(url);
+                    System.out.println("url es "+url);
                     System.out.println("https://api.mercadolibre.com/sites/MLA/payment_methods/rapipago/agencies?near_to=-31.3364568," +
                             "-64.2046846,150000");
                     try {
                         String data = readUrl(url);
                        System.out.println(data);
+                        JsonParser jsonparser = new JsonParser();
+                        JsonObject jsonObject = jsonparser.parse(data).getAsJsonObject();
+                        Agencia[] agencias = new Gson().fromJson(jsonObject.get("results"), Agencia[].class);
+                        System.out.println("Categorias de MELI: ");
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -80,14 +85,15 @@ public class SparkRest {
     */
     /* quiero que me devuelva el resultado de una url */
     private static String readUrl(String urlString) throws IOException { //Malforme esta dentro
+        URL url = new URL(urlString);
 
         BufferedReader reader = null;
         // me lo convierte en un objeto url
         try {
-            URL url = new URL(urlString);
+
             URLConnection connection = url.openConnection();
-            connection.setRequestProperty("Accept", "aplication/json");
-            connection.setRequestProperty("User-Agent", "Mozill/5.0");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             StringBuilder buffer = new StringBuilder();
             char[] chars = new char[1024];
