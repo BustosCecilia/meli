@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 import static spark.Spark.*;
 
@@ -78,7 +79,7 @@ public class SparkRest {
 
 
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    "todo ok"));
+                    "40000"));
         }));
 
 
@@ -97,7 +98,7 @@ public class SparkRest {
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder buffer = new StringBuilder();
             char[] chars = new char[1024];
             int read = 0; // leo la cantidad de caracteres
